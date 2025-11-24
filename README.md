@@ -41,6 +41,8 @@ You should see: `Server running on port 5050`.
   - Users: `GET /api/admin/users`, `PATCH /api/admin/users/:id/promote`
   - Reports: `GET /api/admin/memberships`, `GET /api/admin/event-registrations`
 - Me: `GET /api/me/memberships`, `GET /api/me/event-registrations`
+- - Auth: POST `/api/auth/register`, `/api/auth/login`
+- Clubs: GET `/api/clubs`, GET `/api/clubs/:id`, POST `/api/clubs` (ADMIN), POST `/api/clubs/:id/enroll` (auth)
 
 ### Troubleshooting
 - If you see `@prisma/client did not initialize`, run:
@@ -85,3 +87,5 @@ node -e "const {PrismaClient}=require('@prisma/client');const p=new PrismaClient
 ## Scripts
 - Backend: `npm start` (in `/backend`)
 - Frontend: `npm run dev` (in `/frontend`)
+
+
