@@ -107,7 +107,39 @@ const enrollInClub = async (req, res) => {
   }
 };
 
-
+// Delete club (admin only)
+const deleteClub = async (req, res) => {
+  try {
+    const clubId = Number(req.params.id);
+    
+    // Check if club exists
+    const club = await prisma.club.findUnique({ where: { id: clubId } });
+    if (!club) {
+      return res.status(404).json({ message: 'Club not found' });
+    }
+    
+    // Get all events for this club first
+    const clubEvents = await prisma.event.findMany({ where: { clubId }, select: { id: true } });
+    const eventIds = clubEvents.map(e => e.id);
+    
+    // Delete related records first
+    // Delete event registrations for club's events
+    if (eventIds.length > 0) {
+      await prisma.eventRegistration.deleteMany({ where: { eventId: { in: eventIds } } });
+    }
+    // Delete club memberships
+    await prisma.clubMembership.deleteMany({ where: { clubId } });
+    // Delete club events
+    await prisma.event.deleteMany({ where: { clubId } });
+    
+    // Delete the club
+    await prisma.club.delete({ where: { id: clubId } });
+    res.json({ message: 'Club deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting club:', error);
+    res.status(500).json({ message: 'Failed to delete club', error: error.message });
+  }
+};
 
 module.exports = {
   getAllClubs,
