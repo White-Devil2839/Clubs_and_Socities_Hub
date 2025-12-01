@@ -9,7 +9,7 @@ router.patch('/member/:id/approve', authMiddleware, isAdmin, approveMemberReques
 router.patch('/member/:id/reject', authMiddleware, isAdmin, rejectMemberRequest);
 router.post('/event', authMiddleware, isAdmin, createEvent);
 
-
+// Users admin actions
 router.get('/users', authMiddleware, isAdmin, listUsers);
 router.patch('/users/:id/promote', authMiddleware, isAdmin, promoteUser);
 
