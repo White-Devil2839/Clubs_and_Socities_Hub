@@ -25,3 +25,30 @@ const getClubById = async (req, res) => {
   }
 };
 
+
+// Get all members of a specific club (admin only)
+const getClubMembers = async (req, res) => {
+  try {
+    const clubId = Number(req.params.id);
+    
+    // Check if club exists
+    const club = await prisma.club.findUnique({ where: { id: clubId } });
+    if (!club) {
+      return res.status(404).json({ message: 'Club not found' });
+    }
+    
+    const memberships = await prisma.clubMembership.findMany({
+      where: { clubId },
+      include: { 
+        user: { select: { id: true, name: true, email: true } },
+        club: { select: { id: true, name: true } }
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    
+    res.json(memberships);
+  } catch (error) {
+    console.error('Error fetching club members:', error);
+    res.status(500).json({ message: 'Failed to fetch club members', error: error.message });
+  }
+};
