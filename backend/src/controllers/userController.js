@@ -15,7 +15,6 @@ const getMyMemberships = async (req, res) => {
   }
 };
 
-
 // Get current user's event registrations
 const getMyEventRegistrations = async (req, res) => {
   try {
