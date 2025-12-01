@@ -114,3 +114,36 @@ const registerEvent = async (req, res) => {
     res.status(500).json({ message: 'Could not register for event', error: error.message });
   }
 };
+
+
+// Delete event (admin only)
+const deleteEvent = async (req, res) => {
+  try {
+    const eventId = Number(req.params.id);
+    
+    // Check if event exists
+    const event = await prisma.event.findUnique({ where: { id: eventId } });
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+    
+    // Delete related records first (event registrations)
+    await prisma.eventRegistration.deleteMany({ where: { eventId } });
+    
+    // Delete the event
+    await prisma.event.delete({ where: { id: eventId } });
+    res.json({ message: 'Event deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    res.status(500).json({ message: 'Failed to delete event', error: error.message });
+  }
+};
+
+module.exports = {
+  getAllEvents,
+  getEventById,
+  registerEvent,
+  deleteEvent,
+  getEventRegistrations,
+};
+
