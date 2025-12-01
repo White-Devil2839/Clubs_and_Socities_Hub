@@ -3,7 +3,6 @@ const router = express.Router();
 const { getAllClubs, getClubById, createClub, enrollInClub, deleteClub, getClubMembers } = require('../controllers/clubController');
 const { authMiddleware, isAdmin } = require('../middlewares/authMiddleware');
 
-
 router.get('/', getAllClubs);
 router.get('/:id', getClubById);
 router.get('/:id/members', authMiddleware, isAdmin, getClubMembers);
