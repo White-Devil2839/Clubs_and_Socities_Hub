@@ -115,7 +115,6 @@ const registerEvent = async (req, res) => {
   }
 };
 
-
 // Delete event (admin only)
 const deleteEvent = async (req, res) => {
   try {
@@ -146,4 +145,3 @@ module.exports = {
   deleteEvent,
   getEventRegistrations,
 };
-
