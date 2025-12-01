@@ -34,3 +34,36 @@ export default function ManageClubMembers() {
       setLoading(false);
     });
   }
+
+
+    async function handleApprove(membershipId, userName) {
+    if (!window.confirm(`Approve membership request for ${userName}?`)) {
+      return;
+    }
+    
+    setMessage('');
+    setError('');
+    try {
+      await apiClient.patch(`/admin/member/${membershipId}/approve`);
+      setMessage(`Membership request for ${userName} has been approved.`);
+      loadData(); // Reload the list
+    } catch (e) {
+      setError(e.message || 'Failed to approve membership request');
+    }
+  }
+
+  async function handleReject(membershipId, userName) {
+    if (!window.confirm(`Reject membership request for ${userName}?`)) {
+      return;
+    }
+    
+    setMessage('');
+    setError('');
+    try {
+      await apiClient.patch(`/admin/member/${membershipId}/reject`);
+      setMessage(`Membership request for ${userName} has been rejected.`);
+      loadData(); // Reload the list
+    } catch (e) {
+      setError(e.message || 'Failed to reject membership request');
+    }
+  }
