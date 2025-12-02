@@ -24,3 +24,11 @@ async function prunePastEvents() {
   }
 }
 
+function startEventCleanup(intervalMinutes) {
+  const minutes = Number.isFinite(intervalMinutes) ? intervalMinutes : DEFAULT_INTERVAL_MINUTES;
+  const intervalMs = Math.max(minutes, 1) * 60 * 1000;
+  prunePastEvents();
+  setInterval(prunePastEvents, intervalMs);
+}
+
+module.exports = { startEventCleanup };
