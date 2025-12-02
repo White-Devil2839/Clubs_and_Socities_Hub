@@ -22,5 +22,11 @@ async function prunePastEvents() {
   } catch (error) {
     console.error('[event-cleanup] Failed pruning past events:', error);
   }
-}
+};
+function startEventCleanup(intervalMinutes) {
+  const minutes = Number.isFinite(intervalMinutes) ? intervalMinutes : DEFAULT_INTERVAL_MINUTES;
+  const intervalMs = Math.max(minutes, 1) * 60 * 1000;
+  prunePastEvents();
+  setInterval(prunePastEvents, intervalMs);
+};
 
