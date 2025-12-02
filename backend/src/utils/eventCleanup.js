@@ -30,3 +30,4 @@ function startEventCleanup(intervalMinutes) {
   setInterval(prunePastEvents, intervalMs);
 };
 
+module.exports = { startEventCleanup };
