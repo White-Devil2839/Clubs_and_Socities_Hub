@@ -55,45 +55,49 @@ export default function AdminUsers() {
         title="Manage users"
         description="Promote leaders to admins and keep your roster up to date."
       />
-      <div className="table-scroll">
-        <table className="data-table">
-        <thead>
-          <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(u => (
-            <tr key={u.id}>
-              <td>{u.id}</td>
-              <td>{u.name}</td>
-              <td>{u.email}</td>
-                <td>
-                  <span className={`status-pill ${u.role === 'ADMIN' ? 'success' : ''}`}>{u.role}</span>
-                </td>
-              <td>
-                <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                  {u.role !== 'ADMIN' && (
-                    <button className="btn btn-secondary" onClick={() => handlePromote(u.id)}>
-                      Promote to admin
-                    </button>
-                  )}
-                  {u.id !== user.id && (
-                    <button className="btn btn-danger" onClick={() => handleDelete(u.id, u.name)}>
-                      Delete
-                    </button>
-                  )}
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      {users.length === 0 ? (
+        <div className="empty-state">No users found.</div>
+      ) : (
+        <div className="table-container">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map(u => (
+                <tr key={u.id}>
+                  <td><strong>{u.name}</strong></td>
+                  <td>{u.email}</td>
+                  <td>
+                    <span className={`status-pill ${u.role === 'ADMIN' ? 'success' : 'pending'}`}>
+                      {u.role}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="table-actions" style={{ justifyContent: 'flex-end' }}>
+                      {u.role !== 'ADMIN' && (
+                        <button className="btn btn-secondary" onClick={() => handlePromote(u.id)}>
+                          Promote
+                        </button>
+                      )}
+                      {u.id !== user.id && (
+                        <button className="btn btn-danger" onClick={() => handleDelete(u.id, u.name)}>
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </section>
   );
 }
