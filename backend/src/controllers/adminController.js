@@ -180,6 +180,26 @@ const createEvent = async (req, res) => {
       if (!club) {
         return res.status(400).json({ message: `Club with ID ${parsedClubId} does not exist` });
       }
+
+      // Check for duplicate event: same club at the same time (within 1 hour window)
+      const oneHourBefore = new Date(eventDate.getTime() - 60 * 60 * 1000);
+      const oneHourAfter = new Date(eventDate.getTime() + 60 * 60 * 1000);
+
+      const existingEvent = await prisma.event.findFirst({
+        where: {
+          clubId: parsedClubId,
+          date: {
+            gte: oneHourBefore,
+            lte: oneHourAfter,
+          },
+        },
+      });
+
+      if (existingEvent) {
+        return res.status(409).json({
+          message: `This club already has an event "${existingEvent.title}" scheduled at ${new Date(existingEvent.date).toLocaleString()}. Events for the same club must be at least 1 hour apart.`
+        });
+      }
     }
 
     const event = await prisma.event.create({
