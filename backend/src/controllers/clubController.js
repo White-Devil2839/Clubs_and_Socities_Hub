@@ -75,6 +75,23 @@ const createClub = async (req, res) => {
   }
 
   try {
+    // Check for duplicate club with same name and category
+    const existingClub = await prisma.club.findFirst({
+      where: {
+        name: {
+          equals: name,
+          mode: 'insensitive', // Case-insensitive comparison yeh kuch naya hai
+        },
+        category: category,
+      },
+    });
+
+    if (existingClub) {
+      return res.status(409).json({
+        message: `A club with the name "${name}" in the ${category} category already exists.`
+      });
+    }
+
     // Since this endpoint requires admin access, automatically approve the club
     const club = await prisma.club.create({
       data: {
