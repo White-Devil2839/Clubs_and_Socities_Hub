@@ -26,6 +26,18 @@ export default function AdminUsers() {
     }
   }
 
+  async function handleDelete(id, userName) {
+    if (!confirm(`Are you sure you want to delete user "${userName}"? This will remove all their memberships and event registrations. This action cannot be undone.`)) {
+      return;
+    }
+    try {
+      await apiClient.del(`/admin/users/${id}`);
+      setUsers(prev => prev.filter(u => u.id !== id));
+    } catch (e) {
+      alert(e.message || 'Failed to delete user');
+    }
+  }
+
   if (!user || user.role !== 'ADMIN') {
     return (
       <section className="page-card">
@@ -64,11 +76,18 @@ export default function AdminUsers() {
                   <span className={`status-pill ${u.role === 'ADMIN' ? 'success' : ''}`}>{u.role}</span>
                 </td>
               <td>
-                {u.role !== 'ADMIN' && (
+                <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                  {u.role !== 'ADMIN' && (
                     <button className="btn btn-secondary" onClick={() => handlePromote(u.id)}>
                       Promote to admin
                     </button>
-                )}
+                  )}
+                  {u.id !== user.id && (
+                    <button className="btn btn-danger" onClick={() => handleDelete(u.id, u.name)}>
+                      Delete
+                    </button>
+                  )}
+                </div>
               </td>
             </tr>
           ))}

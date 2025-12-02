@@ -1,8 +1,9 @@
 const bcrypt = require('bcryptjs');
-const { PrismaClient } = require('@prisma/client');
+const jwt = require('jsonwebtoken');
+const { sendEmail } = require('../utils/emailService');
+const { welcomeEmail } = require('../utils/emailTemplates');
+const prisma = require('../prismaClient');
 const generateToken = require('../utils/generateToken');
-
-const prisma = new PrismaClient();
 
 // Register new user
 const registerUser = async (req, res) => {
@@ -24,6 +25,16 @@ const registerUser = async (req, res) => {
         role: 'MEMBER',
       },
     });
+
+    // Send welcome email
+    if (user.email) {
+      sendEmail({
+        to: user.email,
+        subject: 'Welcome to Campus Connect!',
+        html: welcomeEmail(user.name || 'Member')
+      });
+    }
+
     const token = generateToken(user);
     res.status(201).json({ token, user: { id: user.id, email: user.email, name: user.name, role: user.role } });
   } catch (error) {

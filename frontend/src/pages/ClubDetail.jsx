@@ -106,7 +106,7 @@ export default function ClubDetail() {
           actions={
             isAdmin && (
               <div className="header-actions">
-                <Link to={`/clubs/${id}/manage`} className="btn btn-secondary">
+                <Link to={`/clubs/${id}/manage`} className="btn btn-secondary" style={{ backgroundColor: 'var(--surface-2)', border: '1px solid var(--border)' }}>
                   Manage members
                 </Link>
                 <button className="btn btn-danger" onClick={handleDelete}>

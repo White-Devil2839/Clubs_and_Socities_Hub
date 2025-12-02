@@ -2,18 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('./prismaClient');
 const { startEventCleanup } = require('./utils/eventCleanup');
-
-// Patch DATABASE_URL to limit connections
-if (process.env.DATABASE_URL) {
-  const separator = process.env.DATABASE_URL.includes('?') ? '&' : '?';
-  if (!process.env.DATABASE_URL.includes('connection_limit')) {
-    process.env.DATABASE_URL = `${process.env.DATABASE_URL}${separator}connection_limit=1`;
-  }
-}
-
-const prisma = new PrismaClient();
 const app = express();
 
 // CORS configuration - allow all in dev, specific origin in production

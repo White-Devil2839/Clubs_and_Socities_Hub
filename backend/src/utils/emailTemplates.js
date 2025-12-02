@@ -70,9 +70,79 @@ function eventRegistrationConfirmationEmail(userName, eventTitle, eventDate) {
   });
 }
 
+function clubApprovedEmail(clubName, clubDescription) {
+  return wrapTemplate({
+    title: 'Club Approved',
+    body: `
+      <p>Great news!</p>
+      <p>Your club <strong>${clubName}</strong> has been approved and is now live on the Campus Connect Platform.</p>
+      <p><strong>Description:</strong> ${clubDescription || 'N/A'}</p>
+      <p>Students can now discover and join your club. Welcome to the community!</p>
+    `,
+  });
+}
+
+function eventCancelledEmail(userName, eventTitle, eventDate) {
+  return wrapTemplate({
+    title: 'Event Cancelled',
+    body: `
+      <p>Hi ${userName},</p>
+      <p>We regret to inform you that the event <strong>${eventTitle}</strong> scheduled for <strong>${eventDate ? new Date(eventDate).toLocaleString() : 'TBA'}</strong> has been cancelled.</p>
+      <p>We apologize for any inconvenience this may cause.</p>
+      <p>Please check back for future events!</p>
+    `,
+  });
+}
+
+function clubDeletedEmail(userName, clubName) {
+  return wrapTemplate({
+    title: 'Club Removed',
+    body: `
+      <p>Hi ${userName},</p>
+      <p>We wanted to inform you that the club <strong>${clubName}</strong> has been removed from the Campus Connect Platform.</p>
+      <p>Your membership in this club has been automatically removed.</p>
+      <p>Thank you for your participation, and we hope to see you in other clubs!</p>
+    `,
+  });
+}
+
+function membershipRemovedEmail(userName, clubName) {
+  return wrapTemplate({
+    title: 'Membership Removed',
+    body: `
+      <p>Hi ${userName},</p>
+      <p>Your membership in the club <strong>${clubName}</strong> has been removed by an administrator.</p>
+      <p>If you believe this was done in error, please contact the club administrators.</p>
+      <p>Thank you for your understanding.</p>
+    `,
+  });
+}
+
+function welcomeEmail(userName) {
+  return wrapTemplate({
+    title: 'Welcome to Campus Connect!',
+    body: `
+      <p>Hi ${userName},</p>
+      <p>Welcome to the <strong>Campus Connect Platform</strong>!</p>
+      <p>You can now:</p>
+      <ul>
+        <li>Discover and join clubs that match your interests</li>
+        <li>Register for exciting campus events</li>
+        <li>Connect with fellow students and build your community</li>
+      </ul>
+      <p>We're excited to have you on board. Start exploring today!</p>
+    `,
+  });
+}
+
 module.exports = {
   membershipApprovedEmail,
   membershipRejectedEmail,
   newEventNotificationEmail,
   eventRegistrationConfirmationEmail,
+  clubApprovedEmail,
+  eventCancelledEmail,
+  clubDeletedEmail,
+  membershipRemovedEmail,
+  welcomeEmail,
 };

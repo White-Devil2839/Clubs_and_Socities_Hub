@@ -67,6 +67,22 @@ export default function ManageClubMembers() {
     }
   }
 
+  async function handleDelete(membershipId, userName) {
+    if (!window.confirm(`Are you sure you want to remove ${userName} from the club? This action cannot be undone.`)) {
+      return;
+    }
+    
+    setMessage('');
+    setError('');
+    try {
+      await apiClient.del(`/admin/member/${membershipId}`);
+      setMessage(`${userName} has been removed from the club.`);
+      loadData(); // Reload the list
+    } catch (e) {
+      setError(e.message || 'Failed to remove member');
+    }
+  }
+
   const isAdmin = user && (user.role === 'ADMIN' || user.role === 'admin');
   if (!user || !isAdmin) {
     return (
@@ -140,7 +156,12 @@ export default function ManageClubMembers() {
                         </button>
                       </div>
                     ) : (
-                      <span className="muted">{m.status === 'APPROVED' ? 'Approved' : 'Rejected'}</span>
+                      <div className="card-actions">
+                        <span className="muted">{m.status === 'APPROVED' ? 'Approved' : 'Rejected'}</span>
+                        <button className="btn btn-danger btn-sm" onClick={() => handleDelete(m.id, m.user?.name || 'User')} style={{ marginLeft: '1rem' }}>
+                          Delete
+                        </button>
+                      </div>
                     )}
                   </td>
                 </tr>

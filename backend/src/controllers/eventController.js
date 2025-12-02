@@ -1,7 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../prismaClient');
 const { sendEmail } = require('../utils/emailService');
-const { eventRegistrationConfirmationEmail } = require('../utils/emailTemplates');
-const prisma = new PrismaClient();
+const { eventRegistrationConfirmationEmail, eventCancelledEmail } = require('../utils/emailTemplates');
 
 // Get all events
 const getAllEvents = async (_req, res) => {
@@ -21,10 +20,10 @@ const getAllEvents = async (_req, res) => {
 // Get single event by ID
 const getEventById = async (req, res) => {
   try {
-    const event = await prisma.event.findUnique({ 
+    const event = await prisma.event.findUnique({
       where: { id: Number(req.params.id) },
-      include: { 
-        registrations: { 
+      include: {
+        registrations: {
           include: { user: { select: { id: true, name: true, email: true } } }
         },
         club: { select: { id: true, name: true } }
@@ -41,22 +40,22 @@ const getEventById = async (req, res) => {
 const getEventRegistrations = async (req, res) => {
   try {
     const eventId = Number(req.params.id);
-    
+
     // Check if event exists
     const event = await prisma.event.findUnique({ where: { id: eventId } });
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
-    
+
     const registrations = await prisma.eventRegistration.findMany({
       where: { eventId },
-      include: { 
+      include: {
         user: { select: { id: true, name: true, email: true } },
         event: { select: { id: true, title: true, date: true } }
       },
       orderBy: { registeredAt: 'desc' },
     });
-    
+
     res.json(registrations);
   } catch (error) {
     console.error('Error fetching event registrations:', error);
@@ -119,16 +118,40 @@ const registerEvent = async (req, res) => {
 const deleteEvent = async (req, res) => {
   try {
     const eventId = Number(req.params.id);
-    
-    // Check if event exists
-    const event = await prisma.event.findUnique({ where: { id: eventId } });
+
+    // Check if event exists and get registrations
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+      include: {
+        registrations: {
+          include: {
+            user: { select: { email: true, name: true } }
+          }
+        }
+      }
+    });
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
-    
+
+    // Send cancellation emails to all registered users
+    if (event.registrations && event.registrations.length > 0) {
+      const emailPromises = event.registrations
+        .filter(reg => reg.user?.email)
+        .map(reg => sendEmail({
+          to: reg.user.email,
+          subject: `Event Cancelled - ${event.title}`,
+          html: eventCancelledEmail(reg.user.name || 'Member', event.title, event.date)
+        }));
+
+      if (emailPromises.length > 0) {
+        Promise.allSettled(emailPromises);
+      }
+    }
+
     // Delete related records first (event registrations)
     await prisma.eventRegistration.deleteMany({ where: { eventId } });
-    
+
     // Delete the event
     await prisma.event.delete({ where: { id: eventId } });
     res.json({ message: 'Event deleted successfully' });
