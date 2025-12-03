@@ -162,8 +162,6 @@ cd Clubs_and_Socities_Hub
 ### 2. Install Dependencies
 
 ```bash
-# Install root dependencies (if any)
-npm install
 
 # Install backend dependencies
 cd backend
@@ -178,29 +176,20 @@ cd ..
 
 ### 3. Environment Configuration
 
-Create a `.env` file in the **project root**:
+Create a `.env` file in the **Backend**:
 
 ```env
 # Database Configuration (Required)
 DATABASE_URL="mysql://username:password@localhost:3306/clubshub"
+Hosted database url(can be used if you don't have mysql workbench)="mysql://clubs_activebag:ae2f8d42cb7deeff222c7272bf510daaf125102a@lobzor.h.filess.io:3307/clubs_activebag"
 
 # JWT Configuration (Required)
 JWT_SECRET="your-super-secret-jwt-key-minimum-32-characters-long"
 
-# Server Configuration
-PORT=5050
 
-# CORS Configuration (Optional - for production)
-FRONTEND_URL=http://localhost:5173
-
-# Email Configuration (Optional - for notifications)
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
-
-# Event Cleanup Configuration (Optional)
-EVENT_CLEANUP_INTERVAL_MINUTES=5
+EMAIL_USER=your email
+EMAIL_PASS= your app password
+EMAIL_FROM="Campus Connect <yourgmail@gmail.com>"
 ```
 
 **Important Notes**:
@@ -208,7 +197,7 @@ EVENT_CLEANUP_INTERVAL_MINUTES=5
 - `JWT_SECRET` should be a strong random string (32+ characters)
 - `DATABASE_URL` format: `mysql://USER:PASSWORD@HOST:PORT/DATABASE`
 
-### 4. Database Setup
+### 4. Database Setup(only if not using hosted db url)
 
 ```bash
 cd backend
@@ -271,7 +260,7 @@ npm run build
 ```
 
 ## 🔐 Creating the First Admin User
-
+(only if not using hosted db)
 After setting up the application, you need to create an admin user:
 
 ### Method 1: Using Node.js Script
@@ -299,7 +288,7 @@ npx prisma studio --schema ../prisma/schema.prisma
 
 ## � Default Admin Credentials
 
-For development and testing purposes, you can use these credentials:
+For development and testing purposes, you can use these credentials(If using hosted db):
 
 **Email**: `Vipax@gmail.com`  
 **Password**: `Vipax@Team`
