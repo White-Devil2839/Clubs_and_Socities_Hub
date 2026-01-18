@@ -21,6 +21,10 @@ app.use('/api/events', require('./routes/eventRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/me', require('./routes/userRoutes'));
 
+app.get('/', (req, res) => {
+  res.send('Chal Rahi Hai');
+});
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ message: 'API route not found' });
