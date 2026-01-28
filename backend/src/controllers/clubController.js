@@ -78,10 +78,7 @@ const createClub = async (req, res) => {
     // Check for duplicate club with same name and category
     const existingClub = await prisma.club.findFirst({
       where: {
-        name: {
-          equals: name,
-          mode: 'insensitive', // Case-insensitive comparison yeh kuch naya hai
-        },
+        name: name,
         category: category,
       },
     });
