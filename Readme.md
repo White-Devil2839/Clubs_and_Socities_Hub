@@ -155,7 +155,7 @@ EMAIL_PASS=your-app-password
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/White-Devil2839/Clubs_and_Socities_Hub
 cd Clubs_and_Socities_Hub
 ```
 
