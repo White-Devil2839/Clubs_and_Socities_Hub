@@ -22,7 +22,7 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/me', require('./routes/userRoutes'));
 
 app.get('/', (req, res) => {
-  res.send('Chal Rahi Hai');
+  res.send('Running');
 });
 
 // 404 handler
