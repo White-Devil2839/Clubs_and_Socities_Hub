@@ -596,7 +596,7 @@ For issues and questions, please open an issue on the repository.
 
 This project was developed collaboratively by:
 
-- **Jatin**: Frontend Pages
+- **Jatin(RIDECELL Intern)**: Frontend Pages
 - **Neha**: Backend Routes
 - **Tanima**: Backend Controllers
 - **Divyansh**: All the remaining work
